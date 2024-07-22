@@ -26,14 +26,14 @@ const baseUrl = process.env.BASE_URL || 'http://localhost:4000';
 
 // Image storage engine
 const storage = multer.diskStorage({
-    destination: './upload/images',
+    destination: path.join(__dirname, 'upload/images'),
     filename: (req, file, cb) => {
         cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     }
 });
 
 const upload = multer({ storage: storage });
-app.use('/images', express.static('upload/images'));
+app.use('/images', express.static(path.join(__dirname, 'upload/images')));
 
 // Creating upload endpoint for images
 app.post("/upload", upload.single('product'), (req, res) => {
@@ -82,14 +82,7 @@ const Product = mongoose.model("Product", {
 app.post('/addproduct', async (req, res) => {
     try {
         let products = await Product.find({});
-        let id;
-        if (products.length > 0) {
-            let last_product_array = products.slice(-1);
-            let last_product = last_product_array[0];
-            id = last_product.id + 1;
-        } else {
-            id = 1;
-        }
+        let id = products.length > 0 ? products.slice(-1)[0].id + 1 : 1;
         const product = new Product({
             id: id,
             name: req.body.name,
