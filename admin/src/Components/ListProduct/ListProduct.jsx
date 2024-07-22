@@ -5,27 +5,46 @@ import cross_icon from '../../assets/Admin_Assets/cross_icon.png';
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
 
-  const fetchInfo = async () => {
-    await fetch('https://e-commerce-website-backend-y6r5.onrender.com')
-      .then((res) => res.json())
-      .then((data) => { setAllProducts(data); });
-  };
+  // const fetchInfo = async () => {
+  //   await fetch('https://e-commerce-website-backend-y6r5.onrender.com')
+  //     .then((res) => res.json())
+  //     .then((data) => { setAllProducts(data); });
+  // };
 
-  useEffect(() => {
-    fetchInfo();
-  }, []);
+  // useEffect(() => {
+  //   fetchInfo();
+  // }, []);
 
-  const remove_product = async (id) => {
-    await fetch('https://e-commerce-website-backend-y6r5.onrender.com', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: id }),
+  // const remove_product = async (id) => {
+  //   await fetch('https://e-commerce-website-backend-y6r5.onrender.com', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ id: id }),
+  //   });
+  //   await fetchInfo();
+  // };
+const fetchInfo = async () => {
+  await fetch('https://e-commerce-website-backend-y6r5.onrender.com/allproducts')
+    .then((res) => res.json())
+    .then((data) => {
+      setAllProducts(data);
     });
-    await fetchInfo();
-  };
+};
+
+const remove_product = async (id) => {
+  await fetch(`https://e-commerce-website-backend-y6r5.onrender.com/removeproduct`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id: id }),
+  });
+  await fetchInfo();
+};
 
   return (
     <div className='listproduct'>
