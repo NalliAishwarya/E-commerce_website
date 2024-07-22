@@ -26,25 +26,55 @@ const ListProduct = () => {
   //   });
   //   await fetchInfo();
   // };
+// const fetchInfo = async () => {
+//   await fetch('https://e-commerce-website-backend-y6r5.onrender.com/allproducts')
+//     .then((res) => res.json())
+//     .then((data) => {
+//       setAllProducts(data);
+//     });
+// };
+
+// const remove_product = async (id) => {
+//   await fetch(`https://e-commerce-website-backend-y6r5.onrender.com/removeproduct`, {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ id: id }),
+//   });
+//   await fetchInfo();
+// };
 const fetchInfo = async () => {
-  await fetch('https://e-commerce-website-backend-y6r5.onrender.com/allproducts')
-    .then((res) => res.json())
-    .then((data) => {
-      setAllProducts(data);
-    });
+  console.log('Fetching products...');
+  try {
+    const response = await fetch('https://e-commerce-website-backend-y6r5.onrender.com/allproducts');
+    const data = await response.json();
+    console.log('Products fetched:', data);
+    setAllProducts(data);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
 };
 
 const remove_product = async (id) => {
-  await fetch(`https://e-commerce-website-backend-y6r5.onrender.com/removeproduct`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id: id }),
-  });
-  await fetchInfo();
+  console.log(`Removing product with id: ${id}`);
+  try {
+    await fetch('https://e-commerce-website-backend-y6r5.onrender.com/removeproduct', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+    console.log('Product removed, fetching updated list...');
+    await fetchInfo();
+  } catch (error) {
+    console.error('Error removing product:', error);
+  }
 };
+
 
   return (
     <div className='listproduct'>
