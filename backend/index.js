@@ -138,21 +138,28 @@ app.post('/removeproduct', async (req, res) => {
 //     res.send(updatedProducts);
 // });
 app.get('/allproducts', async (req, res) => {
-    let products = await Product.find({});
-    let updatedProducts = products.map(product => {
-        let updatedImage = product.image;
-        if (updatedImage.startsWith('http://localhost:4000')) {
-            updatedImage = updatedImage.replace('http://localhost:4000', 'https://e-commerce-website-backend-y6r5.onrender.com');
-        } else if (updatedImage.startsWith('https://e-commerce-website-backend-y6r5.onrender.com')) {
-            updatedImage = updatedImage.replace('https://e-commerce-website-backend-y6r5.onrender.com', 'https://e-commerce-website-backend-y6r5.onrender.com');
-        }
-        return {
-            ...product.toObject(),
-            image: updatedImage
-        };
-    });
-    res.send(updatedProducts);
+    try {
+        let products = await Product.find({});
+        let updatedProducts = products.map(product => {
+            let updatedImage = product.image;
+            if (updatedImage.startsWith('http://localhost:4000')) {
+                updatedImage = updatedImage.replace('http://localhost:4000', 'https://e-commerce-website-backend-y6r5.onrender.com');
+            }
+            return {
+                ...product.toObject(),
+                image: updatedImage
+            };
+        });
+        res.send(updatedProducts);
+    } catch (error) {
+        console.error('Error fetching products:', error); // Log error
+        res.status(500).json({
+            success: false,
+            error: 'Server error'
+        });
+    }
 });
+
 
 // Schema creation for user model
 const Users = mongoose.model('Users', {
