@@ -129,12 +129,28 @@ app.post('/removeproduct', async (req, res) => {
 });
 
 // Creating API for getting all products
+// app.get('/allproducts', async (req, res) => {
+//     let products = await Product.find({});
+//     let updatedProducts = products.map(product => ({
+//         ...product.toObject(),
+//         image: product.image.replace('http://localhost:4000', 'https://e-commerce-website-backend-y6r5.onrender.com')
+//     }));
+//     res.send(updatedProducts);
+// });
 app.get('/allproducts', async (req, res) => {
     let products = await Product.find({});
-    let updatedProducts = products.map(product => ({
-        ...product.toObject(),
-        image: product.image.replace('http://localhost:4000', 'https://e-commerce-website-backend-y6r5.onrender.com')
-    }));
+    let updatedProducts = products.map(product => {
+        let updatedImage = product.image;
+        if (updatedImage.startsWith('http://localhost:4000')) {
+            updatedImage = updatedImage.replace('http://localhost:4000', 'https://e-commerce-website-backend-y6r5.onrender.com');
+        } else if (updatedImage.startsWith('https://e-commerce-website-backend-y6r5.onrender.com')) {
+            updatedImage = updatedImage.replace('https://e-commerce-website-backend-y6r5.onrender.com', 'https://e-commerce-website-backend-y6r5.onrender.com');
+        }
+        return {
+            ...product.toObject(),
+            image: updatedImage
+        };
+    });
     res.send(updatedProducts);
 });
 
